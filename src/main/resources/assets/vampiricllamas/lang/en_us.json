@@ -1,0 +1,13 @@
+{
+  "itemGroup.vampiricllamas": "Example Mod Tab",
+  "block.vampiricllamas.example_block": "Example Block",
+  "item.vampiricllamas.example_item": "Example Item",
+
+  "vampiricllamas.configuration.title": "Vampiric Llamas Configs",
+  "vampiricllamas.configuration.section.vampiricllamas.common.toml": "Vampiric Llamas Configs",
+  "vampiricllamas.configuration.section.vampiricllamas.common.toml.title": "Vampiric Llamas Configs",
+  "vampiricllamas.configuration.items": "Item List",
+  "vampiricllamas.configuration.logDirtBlock": "Log Dirt Block",
+  "vampiricllamas.configuration.magicNumberIntroduction": "Magic Number Text",
+  "vampiricllamas.configuration.magicNumber": "Magic Number"
+}
