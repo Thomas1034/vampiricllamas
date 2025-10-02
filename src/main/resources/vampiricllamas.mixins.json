@@ -2,11 +2,16 @@
   "required": true,
   "package": "com.startraveler.vampiricllamas.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+    "LlamaSpitMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
   "overwrites": {
     "requireAnnotations": true
-  }
+  },
+  "client": [
+    "LlamaSpitRendererMixin"
+  ]
 }

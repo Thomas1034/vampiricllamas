@@ -10,15 +10,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireLlamaRenderer extends LlamaRenderer {
 
-    private static final ResourceLocation DRACULLAMA = VampiricLlamas.location("textures/entity/llama/vampire_llama.png");
-
+    public static final ResourceLocation VAMPIRE_LLAMA_LOCATION = VampiricLlamas.location(
+            "textures/entity/llama/vampire_llama.png");
 
     public VampireLlamaRenderer(EntityRendererProvider.Context context, ModelLayerLocation layer) {
         super(context, layer);
+        this.addLayer(new VampireEyesLayer<>(this));
     }
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Llama entity) {
-        return DRACULLAMA;
+        return VAMPIRE_LLAMA_LOCATION;
     }
+
 }

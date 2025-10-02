@@ -12,8 +12,16 @@ import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
+import org.spongepowered.asm.mixin.Unique;
 
 public class LlamaBloodSpit extends LlamaSpit {
+
+    @Unique
+    public static final Vector3f BLOOD_COLOR1 = new Vector3f(124, 15, 19).div(255);
+    @Unique
+    public static final Vector3f BLOOD_COLOR2 = new Vector3f(187, 26, 32).div(255);
+
     public LlamaBloodSpit(EntityType<? extends LlamaSpit> entityType, Level level) {
         super(entityType, level);
     }
@@ -38,9 +46,12 @@ public class LlamaBloodSpit extends LlamaSpit {
         super.onHitEntity(result);
         Entity owner = this.getOwner();
         if (owner instanceof LivingEntity entity && entity.isAlive()) {
-            entity.heal(2f);
+            entity.heal(this.getSpitDamage());
             entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0));
         }
     }
 
+    public float getSpitDamage() {
+        return 4.0f;
+    }
 }
