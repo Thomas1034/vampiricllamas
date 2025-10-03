@@ -20,6 +20,10 @@ public class VampireLlamaRenderer extends LlamaRenderer {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Llama entity) {
+
+        if (entity.getTarget() == null && entity.level().isDay()) {
+            return super.getTextureLocation(entity);
+        }
         return VAMPIRE_LLAMA_LOCATION;
     }
 

@@ -1,10 +1,12 @@
 package com.startraveler.vampiricllamas;
 
 import com.mojang.logging.LogUtils;
+import com.startraveler.vampiricllamas.data.VampiricLlamasEnglishUSLanguageProvider;
+import com.startraveler.vampiricllamas.data.VampiricLlamasEntityTypeTagProvider;
 import com.startraveler.vampiricllamas.entity.VampireLlama;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -12,10 +14,14 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
+
+import java.util.concurrent.CompletableFuture;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(VampiricLlamas.MODID)
@@ -45,6 +51,7 @@ public class VampiricLlamas {
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::registerEntityAttributes);
+        modEventBus.addListener(this::gatherData);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -54,10 +61,25 @@ public class VampiricLlamas {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
+    // On the mod event bus
+    public void gatherData(GatherDataEvent event) {
+        PackOutput output = event.getGenerator().getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+
+        // Other providers here
+        event.getGenerator().addProvider(event.includeServer(), new VampiricLlamasEnglishUSLanguageProvider(output));
+        event.getGenerator().addProvider(
+                event.includeServer(),
+                new VampiricLlamasEntityTypeTagProvider(output, lookupProvider, existingFileHelper)
+        );
+    }
+
     private void commonSetup(FMLCommonSetupEvent event) {
         // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
+        // LOGGER.info("HELLO FROM COMMON SETUP");
 
+        /*
         if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
             LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
         }
@@ -65,6 +87,7 @@ public class VampiricLlamas {
         LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
 
         Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
+        */
     }
 
 
@@ -80,6 +103,6 @@ public class VampiricLlamas {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
+        // LOGGER.info("HELLO from server starting");
     }
 }

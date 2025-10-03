@@ -9,7 +9,6 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 public class BoundedDistanceRangedAttackGoal extends RangedAttackGoal {
     private final float[] distanceBounds;
 
-
     @SuppressWarnings("unused")
     public BoundedDistanceRangedAttackGoal(RangedAttackMob rangedAttackMob, double speedModifier, int attackInterval, float attackRadius, FloatList distanceBounds) {
         super(rangedAttackMob, speedModifier, attackInterval, attackRadius);

@@ -25,6 +25,8 @@ public class VampireEyesLayer<T extends Llama, M extends LlamaModel<T>> extends 
 
     @Override
     public @NotNull RenderType renderType() {
+        // TODO override somehow so their eyes don't glow in the daytime?
+        // How do I get entity context?
         return this.type;
     }
 }

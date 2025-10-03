@@ -1,9 +1,8 @@
 package com.startraveler.vampiricllamas.entity;
 
 import com.startraveler.vampiricllamas.VampiricLlamasEntities;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -47,7 +46,7 @@ public class LlamaBloodSpit extends LlamaSpit {
         Entity owner = this.getOwner();
         if (owner instanceof LivingEntity entity && entity.isAlive()) {
             entity.heal(this.getSpitDamage());
-            entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0));
+            VampireLlama.addParticlesAroundEntity(entity, ParticleTypes.SMOKE, 30);
         }
     }
 

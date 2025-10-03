@@ -2,7 +2,6 @@ package com.startraveler.vampiricllamas;
 
 import com.startraveler.vampiricllamas.client.renderer.LlamaBloodSpitRenderer;
 import com.startraveler.vampiricllamas.client.renderer.VampireLlamaRenderer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.api.distmarker.Dist;
@@ -26,6 +25,7 @@ public class VampiricLlamasClient {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
+
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
 
@@ -40,8 +40,5 @@ public class VampiricLlamasClient {
             );
         });
 
-        // Some client setup code
-        VampiricLlamas.LOGGER.info("HELLO FROM CLIENT SETUP");
-        VampiricLlamas.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
 }
