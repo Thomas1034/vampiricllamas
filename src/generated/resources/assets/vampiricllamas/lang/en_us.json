@@ -1,0 +1,11 @@
+{
+  "entity.vampiricllamas.llama_blood_spit": "Llama Blood Spit",
+  "entity.vampiricllamas.vampire_llama": "Vampire Llama",
+  "vampiricllamas.configuration.batsToSummon": "Bats to Summon",
+  "vampiricllamas.configuration.difficultyOverride": "Overridden Difficulty",
+  "vampiricllamas.configuration.section.vampiricllamas.common.toml": "Vampiric Llamas Configs",
+  "vampiricllamas.configuration.section.vampiricllamas.common.toml.title": "Vampiric Llamas Configs",
+  "vampiricllamas.configuration.shouldOverrideDifficulty": "Override Difficulty?",
+  "vampiricllamas.configuration.smokePuffsToCreate": "Smoke Puffs to Create",
+  "vampiricllamas.configuration.title": "Vampiric Llamas Configs"
+}

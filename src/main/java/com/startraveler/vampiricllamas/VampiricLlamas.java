@@ -18,6 +18,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.EntityStruckByLightningEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 
@@ -73,6 +74,12 @@ public class VampiricLlamas {
                 event.includeServer(),
                 new VampiricLlamasEntityTypeTagProvider(output, lookupProvider, existingFileHelper)
         );
+    }
+
+    public void onStruckByLightning(EntityStruckByLightningEvent event) {
+        // TODO
+        // llamas turn to vampires.
+
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

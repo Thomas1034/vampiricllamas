@@ -21,6 +21,7 @@ public class VampiricLlamasEntityTypeTagProvider extends EntityTypeTagsProvider 
 
         this.tag(EntityTypeTags.IMPACT_PROJECTILES).add(VampiricLlamasEntities.LLAMA_BLOOD_SPIT.get());
         this.tag(EntityTypeTags.UNDEAD).add(VampiricLlamasEntities.VAMPIRE_LLAMA.get());
+        this.tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(VampiricLlamasEntities.VAMPIRE_LLAMA.get());
 
     }
 }

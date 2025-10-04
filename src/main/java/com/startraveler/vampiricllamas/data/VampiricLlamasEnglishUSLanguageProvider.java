@@ -32,6 +32,10 @@ public class VampiricLlamasEnglishUSLanguageProvider extends LanguageProvider {
         this.add("vampiricllamas.configuration.title", "Vampiric Llamas Configs");
         this.add("vampiricllamas.configuration.section.vampiricllamas.common.toml", "Vampiric Llamas Configs");
         this.add("vampiricllamas.configuration.section.vampiricllamas.common.toml.title", "Vampiric Llamas Configs");
+        this.add("vampiricllamas.configuration.smokePuffsToCreate", "Smoke Puffs to Create");
+        this.add("vampiricllamas.configuration.batsToSummon", "Bats to Summon");
+        this.add("vampiricllamas.configuration.shouldOverrideDifficulty", "Override Difficulty?");
+        this.add("vampiricllamas.configuration.difficultyOverride", "Overridden Difficulty");
         excludedBlocks = new HashSet<>();
         excludedItems = new HashSet<>();
         excludedTags = new HashSet<>();
