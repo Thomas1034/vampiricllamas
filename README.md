@@ -1,25 +1,20 @@
+# Vampiric Llamas
 
-Installation information
-=======
+Face bleating horrors from accursed tombs!
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+## Overview
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+This Minecraft mod adds vampire llamas, along with useful items crafted from their loot. 
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+As this is a parody of various melodramatic vampire stereotypes, great liberties were taken with the source material. Despite this, vampire llamas are still meant to be an engaging, challenging, and rewarding encounter.
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+## Contents
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+As of the initial release, this mod contains:
+- **Vampire Llamas**, minibosses with multiple stages. They will kill and convert other llamas.
+- **Llama Graveyards**, small spooky graveyards that generate around the world. Eerie bleating sounds emanate from the center crypt.
+- **Vampire Leather** and **Llama Fangs**, obtained from killing **Vampire Llamas**. 
+- **Vampire Leather Armor**, an armor set that grants buffs in the dark. The buffs are different for each piece! Try wearing the whole set for a handy bonus effect.
+- **Totems of Persistence**, items that work much like **Totems of Undying**; they are crafted from **Vampire Leather**, **Bones**, an **Iron Ingot**, and a **Llama Fang**.
+- **Fang Knives**, dagger-like weapons that grant their wielder **Regeneration** and **Hunger** upon striking living foes—exchanging food for even faster regeneration.
+- **Vampire Cloaks**, swooping bat wings that act as an early-game glider. Be warned—while they bestow a bat's flight, they also bestow a curse.
