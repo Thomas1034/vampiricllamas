@@ -1,0 +1,19 @@
+// 1.21.1	2025-10-07T23:06:50.0888617	Tags for minecraft:item mod id vampiricllamas
+88a6252afa1a73336c4f863703fd594fd3c5d3d1 data/c/tags/item/armors.json
+3ea6516b6d25094cb81036fcd4c382e54806312b data/c/tags/item/leathers.json
+705bf96035311dd6c380f355039d50d35bf02f13 data/minecraft/tags/item/chest_armor.json
+88a6252afa1a73336c4f863703fd594fd3c5d3d1 data/minecraft/tags/item/dyeable.json
+cc3d4d339632c56ffde744f0709c3c1d768bd3db data/minecraft/tags/item/enchantable/armor.json
+705bf96035311dd6c380f355039d50d35bf02f13 data/minecraft/tags/item/enchantable/chest_armor.json
+1c89acf659dcf92867005b0fadb490c52be954dd data/minecraft/tags/item/enchantable/durability.json
+1c89acf659dcf92867005b0fadb490c52be954dd data/minecraft/tags/item/enchantable/equippable.json
+01484ec35ff663c071ebd60f47a168b59b3d9f8d data/minecraft/tags/item/enchantable/foot_armor.json
+562ae5b6055c54319d6ef09a13b5b36d6fb4d51a data/minecraft/tags/item/enchantable/head_armor.json
+744955627ceb2998a64b71b3f1569d69c4f81964 data/minecraft/tags/item/enchantable/leg_armor.json
+01484ec35ff663c071ebd60f47a168b59b3d9f8d data/minecraft/tags/item/foot_armor.json
+562ae5b6055c54319d6ef09a13b5b36d6fb4d51a data/minecraft/tags/item/head_armor.json
+744955627ceb2998a64b71b3f1569d69c4f81964 data/minecraft/tags/item/leg_armor.json
+88a6252afa1a73336c4f863703fd594fd3c5d3d1 data/minecraft/tags/item/trimmable_armor.json
+3b0a75bb88ce2f5be5d1153bb28f92b5b11ffc95 data/vampiricllamas/tags/item/acts_as_totem_of_undying.json
+f2f8b97bc326ab94491824b6c8e3e2048771cd03 data/vampiricllamas/tags/item/invisible_armor_in_dark.json
+88a6252afa1a73336c4f863703fd594fd3c5d3d1 data/vampiricllamas/tags/item/vampire_armor.json

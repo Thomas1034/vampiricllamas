@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:vampire_leather_helmet"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_vampire_leather": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampiricllamas:vampire_leather"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_vampire_leather"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:vampire_leather_helmet"
+    ]
+  }
+}

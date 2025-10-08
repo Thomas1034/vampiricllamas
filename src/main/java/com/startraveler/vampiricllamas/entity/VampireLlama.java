@@ -163,39 +163,44 @@ public class VampireLlama extends Llama {
                     return result;
                 }
 
-                VampireLlama vampireLlama = llama.convertTo(VampiricLlamasEntities.VAMPIRE_LLAMA.get(), true);
-                if (vampireLlama != null) {
-                    vampireLlama.finalizeSpawn(
-                            level,
-                            level.getCurrentDifficultyAt(vampireLlama.blockPosition()),
-                            MobSpawnType.CONVERSION,
-                            new Llama.LlamaGroupData(llama.getVariant())
-                    );
-                    vampireLlama.setStrength(llama.getStrength());
-                    // Copy chestedness
-                    vampireLlama.setChest(llama.hasChest());
-                    if (vampireLlama.hasChest()) {
-                        vampireLlama.createInventory();
-
-                    }
-                    // Copy inventory.
-                    Container llamaInventory = llama.getInventory();
-                    Container vampireInventory = vampireLlama.getInventory();
-                    int containerSize = llamaInventory.getContainerSize();
-                    for (int i = 0; i < containerSize; i++) {
-                        vampireInventory.setItem(i, llamaInventory.getItem(i));
-                    }
-
-                    net.neoforged.neoforge.event.EventHooks.onLivingConvert(entity, vampireLlama);
-                    if (!this.isSilent()) {
-                        level.levelEvent(null, LevelEvent.SOUND_ZOMBIE_INFECTED, this.blockPosition(), 0);
-                    }
-
-                    result = false;
-                }
+                result = convertLlamaToVampire(level, llama, result);
             }
         }
 
+        return result;
+    }
+
+    public static boolean convertLlamaToVampire(@NotNull ServerLevel level, Llama llama, boolean result) {
+        VampireLlama vampireLlama = llama.convertTo(VampiricLlamasEntities.VAMPIRE_LLAMA.get(), true);
+        if (vampireLlama != null) {
+            vampireLlama.finalizeSpawn(
+                    level,
+                    level.getCurrentDifficultyAt(vampireLlama.blockPosition()),
+                    MobSpawnType.CONVERSION,
+                    new LlamaGroupData(llama.getVariant())
+            );
+            vampireLlama.setStrength(llama.getStrength());
+            // Copy chestedness
+            vampireLlama.setChest(llama.hasChest());
+            if (vampireLlama.hasChest()) {
+                vampireLlama.createInventory();
+
+            }
+            // Copy inventory.
+            Container llamaInventory = llama.getInventory();
+            Container vampireInventory = vampireLlama.getInventory();
+            int containerSize = llamaInventory.getContainerSize();
+            for (int i = 0; i < containerSize; i++) {
+                vampireInventory.setItem(i, llamaInventory.getItem(i));
+            }
+
+            net.neoforged.neoforge.event.EventHooks.onLivingConvert(llama, vampireLlama);
+            if (!llama.isSilent()) {
+                level.levelEvent(null, LevelEvent.SOUND_ZOMBIE_INFECTED, llama.blockPosition(), 0);
+            }
+
+            result = false;
+        }
         return result;
     }
 
@@ -380,7 +385,7 @@ public class VampireLlama extends Llama {
     }
 
     protected void summonBat() {
-        Bat bat; // come sit on my hat
+        Bat bat; // come under on my hat
         bat = new Bat(EntityType.BAT, this.level());
         bat.setResting(false);
         bat.setPos(this.position());

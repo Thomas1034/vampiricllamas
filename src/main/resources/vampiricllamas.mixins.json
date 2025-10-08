@@ -3,6 +3,8 @@
   "package": "com.startraveler.vampiricllamas.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "FireworkRocketItemMixin",
+    "LivingEntityMixin",
     "LlamaSpitMixin"
   ],
   "injectors": {
@@ -12,6 +14,9 @@
     "requireAnnotations": true
   },
   "client": [
+    "ClientPacketListenerMixin",
+    "ElytraLayerMixin",
+    "HumanoidArmorModelMixin",
     "LlamaSpitRendererMixin"
   ]
 }

@@ -45,7 +45,7 @@ public class VampireEyesLayer<T extends Llama, M extends LlamaModel<T>> extends 
     }
 
     protected RenderType renderType(@Nullable T entity) {
-        if ((entity instanceof VampireLlama vampireLlama && vampireLlama.isAttacking()) || !VampireLlamaRenderer.isDay(
+        if ((entity instanceof VampireLlama vampireLlama && vampireLlama.isAttacking()) || !VampiricLlamas.isDay(
                 entity != null ? entity.level() : null)) {
             return this.visibleType;
         } else {

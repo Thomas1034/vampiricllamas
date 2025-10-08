@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "minecraft:leather_chestplate"
+    },
+    "L": {
+      "item": "vampiricllamas:vampire_leather"
+    },
+    "P": {
+      "item": "minecraft:phantom_membrane"
+    }
+  },
+  "pattern": [
+    "PCP",
+    "PLP",
+    "L L"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampiricllamas:vampire_cloak"
+  }
+}

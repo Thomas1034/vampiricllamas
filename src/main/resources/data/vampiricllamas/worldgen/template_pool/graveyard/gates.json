@@ -1,0 +1,59 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/gates/gate1",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/gates/gate2",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/gates/gate3",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/gates/wall_broken",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 10,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/gates/wall",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 5,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/gates/bars",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    }
+  ]
+}

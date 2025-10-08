@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_llama_fang": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampiricllamas:llama_fang"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:fang_knife"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_llama_fang"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:fang_knife"
+    ]
+  }
+}

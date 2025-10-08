@@ -1,0 +1,104 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/tomb1",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/tomb2",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/tomb3",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/tomb4",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/tomb5",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 5,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/tomb6",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 5,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/tomb7",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/bench",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/flowers",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/dirt",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "vampiricllamas:graveyard/tombs/puddle",
+        "projection": "rigid",
+        "processors": "vampiricllamas:graveyard"
+      }
+    }
+  ]
+}
