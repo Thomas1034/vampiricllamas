@@ -42,7 +42,7 @@ public class VampiricLlamasItems {
             properties -> new EffectGivingSwordItem(
                     VampiricLlamasToolTiers.FANG, properties, List.of(
                     new EffectGivingSwordItem.SwordEffect(
-                            EffectGivingSwordItem.defaultEffect(MobEffects.REGENERATION, 1),
+                            EffectGivingSwordItem.defaultEffect(MobEffects.REGENERATION, 2),
                             (stack, target, attacker) -> !target.getType().is(EntityTypeTags.UNDEAD)
                     ),
                     new EffectGivingSwordItem.SwordEffect(
