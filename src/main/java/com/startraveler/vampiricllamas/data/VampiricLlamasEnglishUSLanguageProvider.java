@@ -51,7 +51,7 @@ public class VampiricLlamasEnglishUSLanguageProvider extends LanguageProvider {
     protected void addTranslations() {
 
         // Delete all superfluous entries and manual override as need be.
-
+        this.add("creativetab.vampiric_llamas.vampiric_llamas_items", "Vampiric Llamas Items");
         // Now, do all the rest automagically.
         this.addBlockTranslations(List.of());
         this.addTagTranslations(List.of(

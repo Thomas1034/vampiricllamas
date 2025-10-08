@@ -1,6 +1,7 @@
 package com.startraveler.vampiricllamas;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
@@ -19,7 +20,7 @@ public class VampiricLlamasCreativeModeTabs {
     @SuppressWarnings("unused")
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> VAMPIRIC_LLAMAS_ITEMS = CREATIVE_MODE_TABS.register(
             "vampiric_llamas_items",
-            () -> CreativeModeTab.builder()
+            () -> CreativeModeTab.builder().title(Component.translatable("creativetab.vampiric_llamas.vampiric_llamas_items"))
                     .icon(() -> new ItemStack(VampiricLlamasItems.TOTEM_OF_PERSISTING.get())).displayItems(
                             (parameters, output) -> {
                                 // Add any other items as needed.

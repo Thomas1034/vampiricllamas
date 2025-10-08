@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-07T23:06:50.0888617	Recipes
+// 1.21.1	2025-10-08T01:01:25.44388	Recipes
 e3f2df1e734417f1b26509721e01fdf7d60a974b data/minecraft/advancement/recipes/combat/fang_knife.json
 f46652c1f4f7e04d945884590f10cd49cf2dab0f data/minecraft/advancement/recipes/combat/totem_of_persisting.json
 97c3aa3aaa1e88dd408952d3c93214e2a44de2f8 data/minecraft/advancement/recipes/combat/vampire_cloak.json
@@ -8,7 +8,7 @@ ca7df041cbea5b16805121d400b5cb6867dbc83b data/minecraft/advancement/recipes/comb
 65f07b85b0354556363144afcb6f5425670f6a3d data/minecraft/advancement/recipes/combat/vampire_leather_leggings.json
 67d64c2cc1f04980a06a458bf7b7a52ab1aefe77 data/minecraft/recipe/fang_knife.json
 0b406a937540cf9304af6b825c86bed1f67e280e data/minecraft/recipe/totem_of_persisting.json
-a671a2ac6aae27b170da3e2355c6d8b23bf1a3be data/minecraft/recipe/vampire_cloak.json
+27b846d8c71bb881bb8153b03335f2d80f721583 data/minecraft/recipe/vampire_cloak.json
 37d96ec734a1d58eeab4adf59941f28013859268 data/minecraft/recipe/vampire_leather_boots.json
 f1c46c9e8b89a3e44a11f05f80df0a1f6ffde079 data/minecraft/recipe/vampire_leather_chestplate.json
 d0ee39121d29fe9e08512d614100d9f5eb4e17f3 data/minecraft/recipe/vampire_leather_helmet.json
