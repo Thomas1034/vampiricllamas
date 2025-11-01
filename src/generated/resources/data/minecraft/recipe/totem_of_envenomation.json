@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "minecraft:spider_eye"
+    },
+    "F": {
+      "item": "vampiricllamas:llama_fang"
+    },
+    "I": {
+      "tag": "c:ingots/gold"
+    },
+    "L": {
+      "item": "vampiricllamas:vampire_scale"
+    }
+  },
+  "pattern": [
+    "BLB",
+    "LFL",
+    "BIB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vampiricllamas:totem_of_envenomation"
+  }
+}

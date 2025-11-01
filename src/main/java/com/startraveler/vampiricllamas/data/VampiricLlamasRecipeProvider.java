@@ -35,6 +35,20 @@ public class VampiricLlamasRecipeProvider extends RecipeProvider {
                 )
                 .save(output, "totem_of_persisting");
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, VampiricLlamasItems.TOTEM_OF_ENVENOMATION)
+                .pattern("BLB")
+                .pattern("LFL")
+                .pattern("BIB")
+                .define('L', VampiricLlamasItems.VAMPIRE_SCALE)
+                .define('F', VampiricLlamasItems.LLAMA_FANG)
+                .define('I', Tags.Items.INGOTS_GOLD)
+                .define('B', Items.SPIDER_EYE)
+                .unlockedBy(
+                        VampiricLlamasRecipeProvider.getHasName(VampiricLlamasItems.VAMPIRE_SCALE),
+                        VampiricLlamasRecipeProvider.has(VampiricLlamasItems.VAMPIRE_SCALE)
+                )
+                .save(output, "totem_of_envenomation");
+
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, VampiricLlamasItems.FANG_KNIFE)
                 .pattern(" F")
                 .pattern("B ")
@@ -98,6 +112,47 @@ public class VampiricLlamasRecipeProvider extends RecipeProvider {
                         VampiricLlamasRecipeProvider.has(VampiricLlamasItems.VAMPIRE_LEATHER)
                 )
                 .save(output, "vampire_leather_boots");
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, VampiricLlamasItems.VAMPIRE_SCALE_HELMET)
+                .pattern("LLL")
+                .pattern("L L")
+                .pattern("   ")
+                .define('L', VampiricLlamasItems.VAMPIRE_SCALE)
+                .unlockedBy(
+                        VampiricLlamasRecipeProvider.getHasName(VampiricLlamasItems.VAMPIRE_SCALE),
+                        VampiricLlamasRecipeProvider.has(VampiricLlamasItems.VAMPIRE_SCALE)
+                )
+                .save(output, "vampire_scale_helmet");
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, VampiricLlamasItems.VAMPIRE_SCALE_CHESTPLATE)
+                .pattern("L L")
+                .pattern("LLL")
+                .pattern("LLL")
+                .define('L', VampiricLlamasItems.VAMPIRE_SCALE)
+                .unlockedBy(
+                        VampiricLlamasRecipeProvider.getHasName(VampiricLlamasItems.VAMPIRE_SCALE),
+                        VampiricLlamasRecipeProvider.has(VampiricLlamasItems.VAMPIRE_SCALE)
+                )
+                .save(output, "vampire_scale_chestplate");
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, VampiricLlamasItems.VAMPIRE_SCALE_LEGGINGS)
+                .pattern("LLL")
+                .pattern("L L")
+                .pattern("L L")
+                .define('L', VampiricLlamasItems.VAMPIRE_SCALE)
+                .unlockedBy(
+                        VampiricLlamasRecipeProvider.getHasName(VampiricLlamasItems.VAMPIRE_SCALE),
+                        VampiricLlamasRecipeProvider.has(VampiricLlamasItems.VAMPIRE_SCALE)
+                )
+                .save(output, "vampire_scale_leggings");
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, VampiricLlamasItems.VAMPIRE_SCALE_BOOTS)
+                .pattern("   ")
+                .pattern("L L")
+                .pattern("L L")
+                .define('L', VampiricLlamasItems.VAMPIRE_SCALE)
+                .unlockedBy(
+                        VampiricLlamasRecipeProvider.getHasName(VampiricLlamasItems.VAMPIRE_SCALE),
+                        VampiricLlamasRecipeProvider.has(VampiricLlamasItems.VAMPIRE_SCALE)
+                )
+                .save(output, "vampire_scale_boots");
 
     }
 }

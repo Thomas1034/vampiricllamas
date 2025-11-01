@@ -1,8 +1,10 @@
 package com.startraveler.vampiricllamas;
 
 import com.startraveler.vampiricllamas.client.renderer.LlamaBloodSpitRenderer;
+import com.startraveler.vampiricllamas.client.renderer.LlamiaRenderer;
 import com.startraveler.vampiricllamas.client.renderer.VampireCloakLayer;
 import com.startraveler.vampiricllamas.client.renderer.VampireLlamaRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -28,6 +30,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
 import org.jetbrains.annotations.NotNull;
 
 // This class will not load on dedicated servers. Accessing client side code from here is safe.
@@ -82,7 +85,14 @@ public class VampiricLlamasClient {
                     event.getContext().getModelSet()
             ));
         }
+    }
 
+    @SubscribeEvent
+    static void setVenomHearts(PlayerHeartTypeEvent event) {
+        if (event.getOriginalType() != Gui.HeartType.POISIONED && event.getEntity()
+                .hasEffect(VampiricLlamasEffects.VENOM)) {
+            event.setType(Gui.HeartType.POISIONED);
+        }
 
     }
 
@@ -93,6 +103,10 @@ public class VampiricLlamasClient {
             EntityRenderers.register(
                     VampiricLlamasEntities.VAMPIRE_LLAMA.get(),
                     context -> new VampireLlamaRenderer(context, ModelLayers.LLAMA)
+            );
+            EntityRenderers.register(
+                    VampiricLlamasEntities.LLAMIA.get(),
+                    context -> new LlamiaRenderer(context, ModelLayers.LLAMA)
             );
             EntityRenderers.register(VampiricLlamasEntities.LLAMA_BLOOD_SPIT.get(), LlamaBloodSpitRenderer::new);
         });

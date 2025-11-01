@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:totem_of_envenomation"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_vampire_scale": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampiricllamas:vampire_scale"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_vampire_scale"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:totem_of_envenomation"
+    ]
+  }
+}

@@ -32,6 +32,11 @@ public class EffectGivingSwordItem extends SwordItem {
         return EffectGivingSwordItem.defaultEffect(effect, 0);
     }
 
+
+    public static Supplier<MobEffectInstance> tickCountEffect(@NotNull Holder<MobEffect> effect, int ticks, int amplifier) {
+        return () -> new MobEffectInstance(effect, ticks, amplifier, true, true);
+    }
+
     public static Supplier<MobEffectInstance> defaultEffect(@NotNull Holder<MobEffect> effect, int amplifier) {
         return () -> new MobEffectInstance(effect, 40, amplifier, true, true);
     }

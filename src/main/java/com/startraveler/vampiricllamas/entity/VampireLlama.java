@@ -17,6 +17,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -36,13 +37,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.LevelEvent;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class VampireLlama extends Llama {
+public class VampireLlama extends Llama implements VampiresThatAttack {
 
     public static final int LONG_DURATION_RESURRECTION_BUFF = 240;
     public static final int SHORT_DURATION_RESURRECTION_BUFF = 60;
@@ -64,8 +67,6 @@ public class VampireLlama extends Llama {
 
     public VampireLlama(EntityType<? extends VampireLlama> entityType, Level level) {
         super(entityType, level);
-        this.setResurrections(this.getEffectiveDifficulty());
-        this.setPersistenceRequired();
     }
 
     @SuppressWarnings("unused")
@@ -130,43 +131,38 @@ public class VampireLlama extends Llama {
         }
     }
 
-    @Override
-    public void tick() {
-        super.tick();
+    public static boolean convertLlamaToLlamia(@NotNull ServerLevel level, Llama llama, boolean result) {
+        Llamia llamia = llama.convertTo(VampiricLlamasEntities.LLAMIA.get(), true);
+        if (llamia != null) {
+            llamia.finalizeSpawn(
+                    level,
+                    level.getCurrentDifficultyAt(llamia.blockPosition()),
+                    MobSpawnType.CONVERSION,
+                    new LlamaGroupData(llama.getVariant())
+            );
+            llamia.setStrength(llama.getStrength());
+            // Copy chestedness
+            llamia.setChest(llama.hasChest());
+            if (llamia.hasChest()) {
+                // TODO make this work.
+                llamia.createInventory();
 
-        if (this.level() instanceof ServerLevel) {
-            boolean isAttacking = (this.getTarget() != null || this.isAggressive());
-
-            if (this.isAttacking() != isAttacking) {
-                this.setAttacking(isAttacking);
             }
-        }
-    }
-
-    public int getEffectiveDifficulty() {
-        if (Config.SHOULD_OVERRIDE_DIFFICULTY.getAsBoolean()) {
-            return Config.DIFFICULTY_OVERRIDE.getAsInt();
-        }
-        return this.level().getDifficulty().getId();
-    }
-
-    // From Zombie, loosely.
-    @Override
-    public boolean killedEntity(@NotNull ServerLevel level, @NotNull LivingEntity entity) {
-        boolean result = super.killedEntity(level, entity);
-        if (level.getDifficulty() == Difficulty.NORMAL || level.getDifficulty() == Difficulty.HARD) {
-            if (entity instanceof Llama llama && (llama.getType() == EntityType.LLAMA) && net.neoforged.neoforge.event.EventHooks.canLivingConvert(
-                    entity, VampiricLlamasEntities.VAMPIRE_LLAMA.get(), (timer) -> {
-                    }
-            )) {
-                if (level.getDifficulty() != Difficulty.HARD && this.random.nextBoolean()) {
-                    return result;
-                }
-
-                result = convertLlamaToVampire(level, llama, result);
+            // Copy inventory.
+            Container llamaInventory = llama.getInventory();
+            Container llamiaInventory = llamia.getInventory();
+            int containerSize = llamaInventory.getContainerSize();
+            for (int i = 0; i < containerSize; i++) {
+                llamiaInventory.setItem(i, llamaInventory.getItem(i));
             }
-        }
 
+            net.neoforged.neoforge.event.EventHooks.onLivingConvert(llama, llamia);
+            if (!llama.isSilent()) {
+                level.levelEvent(null, LevelEvent.SOUND_ZOMBIE_INFECTED, llama.blockPosition(), 0);
+            }
+
+            result = false;
+        }
         return result;
     }
 
@@ -205,6 +201,55 @@ public class VampireLlama extends Llama {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+
+        if (this.level() instanceof ServerLevel) {
+            boolean isAttacking = (this.getTarget() != null || this.isAggressive());
+
+            if (this.isAttacking() != isAttacking) {
+                this.setAttacking(isAttacking);
+            }
+        }
+    }
+
+    public int getEffectiveDifficulty() {
+        if (Config.SHOULD_OVERRIDE_DIFFICULTY.getAsBoolean()) {
+            return Config.DIFFICULTY_OVERRIDE.getAsInt();
+        }
+        return this.level().getDifficulty().getId();
+    }
+
+    // From Zombie, loosely.
+    @Override
+    public boolean killedEntity(@NotNull ServerLevel level, @NotNull LivingEntity entity) {
+        boolean result = super.killedEntity(level, entity);
+        if (level.getDifficulty() == Difficulty.NORMAL || level.getDifficulty() == Difficulty.HARD) {
+            if (entity instanceof Llama llama && (llama.getType() == EntityType.LLAMA) && net.neoforged.neoforge.event.EventHooks.canLivingConvert(
+                    entity, VampiricLlamasEntities.VAMPIRE_LLAMA.get(), (timer) -> {
+                    }
+            )) {
+                if (level.getDifficulty() != Difficulty.HARD && this.random.nextBoolean()) {
+                    return result;
+                }
+
+                result = convertLlamaToVampire(level, llama, result);
+            } else if (entity instanceof TraderLlama llama && (llama.getType() == EntityType.TRADER_LLAMA) && net.neoforged.neoforge.event.EventHooks.canLivingConvert(
+                    entity, VampiricLlamasEntities.LLAMIA.get(), (timer) -> {
+                    }
+            )) {
+                if (level.getDifficulty() != Difficulty.HARD && this.random.nextBoolean()) {
+                    return result;
+                }
+
+                result = convertLlamaToLlamia(level, llama, result);
+            }
+        }
+
+        return result;
+    }
+
+    @Override
     protected void registerGoals() {
 
         this.goalSelector.addGoal(0, new FloatGoal(this));
@@ -218,7 +263,7 @@ public class VampireLlama extends Llama {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 0.7));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, VampireLlama.class));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, VampireLlama.class, Llamia.class));
         this.targetSelector.addGoal(
                 2,
                 new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, IS_VALID_VAMPIRE_TARGET)
@@ -247,6 +292,16 @@ public class VampireLlama extends Llama {
     @Override
     public boolean isFood(@NotNull ItemStack stack) {
         return false;
+    }
+
+    @Override
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+
+        this.setResurrections(this.getEffectiveDifficulty());
+        this.setPersistenceRequired();
+
+        return result;
     }
 
     @Override

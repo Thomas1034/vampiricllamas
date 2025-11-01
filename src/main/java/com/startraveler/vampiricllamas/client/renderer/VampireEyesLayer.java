@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.startraveler.vampiricllamas.VampiricLlamas;
 import com.startraveler.vampiricllamas.entity.VampireLlama;
+import com.startraveler.vampiricllamas.entity.VampiresThatAttack;
 import net.minecraft.client.model.LlamaModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -45,7 +46,7 @@ public class VampireEyesLayer<T extends Llama, M extends LlamaModel<T>> extends 
     }
 
     protected RenderType renderType(@Nullable T entity) {
-        if ((entity instanceof VampireLlama vampireLlama && vampireLlama.isAttacking()) || !VampiricLlamas.isDay(
+        if ((entity instanceof VampiresThatAttack vampireLlama && vampireLlama.isAttacking()) || !VampiricLlamas.isDay(
                 entity != null ? entity.level() : null)) {
             return this.visibleType;
         } else {

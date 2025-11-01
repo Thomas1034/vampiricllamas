@@ -65,6 +65,41 @@ public class VampiricLlamasArmorMaterials {
                     )
             );
 
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> VAMPIRE_SCALE_ARMOR_MATERIAL =
+            ARMOR_MATERIALS.register(
+                    "vampire_scale", () -> new ArmorMaterial(
+                            // Determines the defense value of this armor material, depending on what armor piece it is.
+                            Util.make(
+                                    new EnumMap<>(ArmorItem.Type.class), map -> {
+                                        map.put(ArmorItem.Type.BOOTS, 2);
+                                        map.put(ArmorItem.Type.LEGGINGS, 3);
+                                        map.put(ArmorItem.Type.CHESTPLATE, 4);
+                                        map.put(ArmorItem.Type.HELMET, 2);
+                                        map.put(ArmorItem.Type.BODY, 6);
+                                    }
+                            ),
+                            // Determines the enchantability of the tier. This represents how good the enchantments on this armor will be.
+                            16,
+                            // Determines the sound played when equipping this armor.
+                            // This is wrapped with a Holder.
+                            SoundEvents.ARMOR_EQUIP_CHAIN,
+                            // Determines the repair item for this armor.
+                            () -> Ingredient.of(VampiricLlamasItems.VAMPIRE_SCALE),
+                            // Determines the texture locations of the armor to apply when rendering
+                            List.of(
+                                    // Creates a new armor texture that will be located at:
+                                    // - 'assets/mod_id/textures/models/armor/copper_layer_1.png' for the outer texture
+                                    // - 'assets/mod_id/textures/models/armor/copper_layer_2.png' for the inner texture (only legs)
+                                    new ArmorMaterial.Layer(
+                                            VampiricLlamas.location("vampire_scale"), "", false
+                                    )
+                            ),
+                            0,
+                            0.1f
+                    )
+            );
+
+
     public static void init(IEventBus bus) {
         ARMOR_MATERIALS.register(bus);
     }

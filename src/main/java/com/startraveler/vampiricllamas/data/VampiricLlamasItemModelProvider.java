@@ -41,15 +41,22 @@ public class VampiricLlamasItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         spawnEggItem(VampiricLlamasItems.VAMPIRE_LLAMA_SPAWN_EGG.get());
+        spawnEggItem(VampiricLlamasItems.LLAMIA_SPAWN_EGG.get());
         basicItem(VampiricLlamasItems.VAMPIRE_LEATHER.get());
+        basicItem(VampiricLlamasItems.VAMPIRE_SCALE.get());
         basicItem(VampiricLlamasItems.LLAMA_FANG.get());
         basicItem(VampiricLlamasItems.TOTEM_OF_PERSISTING.get());
+        basicItem(VampiricLlamasItems.TOTEM_OF_ENVENOMATION.get());
         handheldItem(VampiricLlamasItems.FANG_KNIFE.get());
         trimmedLayeredArmorItem(VampiricLlamasItems.VAMPIRE_LEATHER_HELMET);
         trimmedLayeredArmorItem(VampiricLlamasItems.VAMPIRE_LEATHER_CHESTPLATE);
         trimmedLayeredArmorItem(VampiricLlamasItems.VAMPIRE_CLOAK);
         trimmedLayeredArmorItem(VampiricLlamasItems.VAMPIRE_LEATHER_LEGGINGS);
         trimmedLayeredArmorItem(VampiricLlamasItems.VAMPIRE_LEATHER_BOOTS);
+        trimmedArmorItem(VampiricLlamasItems.VAMPIRE_SCALE_HELMET);
+        trimmedArmorItem(VampiricLlamasItems.VAMPIRE_SCALE_CHESTPLATE);
+        trimmedArmorItem(VampiricLlamasItems.VAMPIRE_SCALE_LEGGINGS);
+        trimmedArmorItem(VampiricLlamasItems.VAMPIRE_SCALE_BOOTS);
     }
 
     @SuppressWarnings("unused")

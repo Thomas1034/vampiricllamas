@@ -1,6 +1,7 @@
 package com.startraveler.vampiricllamas;
 
 import com.startraveler.vampiricllamas.entity.LlamaBloodSpit;
+import com.startraveler.vampiricllamas.entity.Llamia;
 import com.startraveler.vampiricllamas.entity.VampireLlama;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +26,16 @@ public class VampiricLlamasEntities {
                     .passengerAttachments(new Vec3(0.0F, 1.37, -0.3))
                     .clientTrackingRange(10)
                     .build("vampire_llama")
+    );
+
+    public static final DeferredHolder<EntityType<?>, EntityType<Llamia>> LLAMIA = ENTITIES.register(
+            "llamia",
+            () -> EntityType.Builder.<Llamia>of(Llamia::new, MobCategory.MONSTER)
+                    .sized(0.9F, 1.87F)
+                    .eyeHeight(1.7765F)
+                    .passengerAttachments(new Vec3(0.0F, 1.37, -0.3))
+                    .clientTrackingRange(10)
+                    .build("llamia")
     );
 
     public static final DeferredHolder<EntityType<?>, EntityType<LlamaBloodSpit>> LLAMA_BLOOD_SPIT = ENTITIES.register(

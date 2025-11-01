@@ -2,6 +2,7 @@ package com.startraveler.vampiricllamas;
 
 import com.mojang.logging.LogUtils;
 import com.startraveler.vampiricllamas.data.*;
+import com.startraveler.vampiricllamas.entity.Llamia;
 import com.startraveler.vampiricllamas.entity.VampireLlama;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
@@ -16,11 +17,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.animal.horse.TraderLlama;
+import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -37,12 +41,15 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityStruckByLightningEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 // TODO
@@ -158,6 +165,46 @@ public class VampiricLlamas {
         return VampiricLlamas.getSkyDarken(level) < 4;
     }
 
+    @SubscribeEvent
+    public void onEntityTakeDamage(LivingDamageEvent.Post event) {
+        LivingEntity hurtEntity = event.getEntity();
+
+        EquipmentSlot slot = null;
+        if (hurtEntity.getMainHandItem().is(VampiricLlamasItems.TOTEM_OF_ENVENOMATION)) {
+            slot = EquipmentSlot.MAINHAND;
+        } else if (hurtEntity.getOffhandItem().is(VampiricLlamasItems.TOTEM_OF_ENVENOMATION)) {
+            slot = EquipmentSlot.OFFHAND;
+        }
+        if (slot != null) {
+            if (event.getSource().getDirectEntity() instanceof LivingEntity) {
+
+                // Make hurt entity immune.
+                hurtEntity.addEffect(new MobEffectInstance(VampiricLlamasEffects.VENOMOUS, 400, 0), hurtEntity);
+                // Add potion cloud.
+                AreaEffectCloud areaEffectCloud = new AreaEffectCloud(
+                        hurtEntity.level(),
+                        hurtEntity.getX(),
+                        hurtEntity.getY(),
+                        hurtEntity.getZ()
+                );
+                areaEffectCloud.setOwner(hurtEntity);
+
+                areaEffectCloud.setRadius(4.0F);
+                areaEffectCloud.setRadiusOnUse(-0.5F);
+                areaEffectCloud.setWaitTime(10);
+                areaEffectCloud.setRadiusPerTick(-areaEffectCloud.getRadius() / (float) areaEffectCloud.getDuration());
+                areaEffectCloud.setPotionContents(new PotionContents(
+                        Optional.empty(), Optional.of(0x2a730d), List.of(new MobEffectInstance(
+                        VampiricLlamasEffects.VENOM, 900, 1))
+                ));
+                hurtEntity.level().addFreshEntity(areaEffectCloud);
+
+                // Damage totem
+                hurtEntity.getItemBySlot(slot).hurtAndBreak(1, hurtEntity, slot);
+            }
+        }
+    }
+
     // On the mod event bus
     public void gatherData(GatherDataEvent event) {
         final DataGenerator generator = event.getGenerator();
@@ -174,13 +221,7 @@ public class VampiricLlamas {
                 existingFileHelper
         );
         generator.addProvider(run, blockTagsProvider);
-        generator.addProvider(
-                run, new VampiricLlamasMobEffectTagProvider(
-                        output,
-                        lookupProvider,
-                        existingFileHelper
-                )
-        );
+        generator.addProvider(run, new VampiricLlamasMobEffectTagProvider(output, lookupProvider, existingFileHelper));
         generator.addProvider(run, new VampiricLlamasEnglishUSLanguageProvider(output));
         generator.addProvider(run, new VampiricLlamasEntityTypeTagProvider(output, lookupProvider, existingFileHelper));
         generator.addProvider(
@@ -196,13 +237,12 @@ public class VampiricLlamas {
     }
 
     public void onStruckByLightning(EntityStruckByLightningEvent event) {
-        // TODO
-        // llamas turn to vampires.
         Entity e = event.getEntity();
         if (e.getType() == EntityType.LLAMA && e instanceof Llama llama && llama.level() instanceof ServerLevel serverLevel) {
             VampireLlama.convertLlamaToVampire(serverLevel, llama, false);
+        } else if (e.getType() == EntityType.TRADER_LLAMA && e instanceof TraderLlama llama && llama.level() instanceof ServerLevel serverLevel) {
+            VampireLlama.convertLlamaToLlamia(serverLevel, llama, false);
         }
-
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
@@ -214,23 +254,12 @@ public class VampiricLlamas {
             water.put(VampiricLlamasItems.VAMPIRE_LEATHER_CHESTPLATE.get(), CauldronInteraction.DYED_ITEM);
             water.put(VampiricLlamasItems.VAMPIRE_LEATHER_HELMET.get(), CauldronInteraction.DYED_ITEM);
         });
-        // Some common setup code
-        // LOGGER.info("HELLO FROM COMMON SETUP");
-
-        /*
-        if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
-            LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
-        }
-
-        LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
-
-        Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
-        */
     }
 
 
     public void registerEntityAttributes(final EntityAttributeCreationEvent event) {
         event.put(VampiricLlamasEntities.VAMPIRE_LLAMA.get(), VampireLlama.createAttributes().build());
+        event.put(VampiricLlamasEntities.LLAMIA.get(), Llamia.createAttributes().build());
     }
 
     // Add items to creative mode tabs

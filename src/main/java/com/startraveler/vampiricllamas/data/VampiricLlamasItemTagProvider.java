@@ -63,5 +63,37 @@ public class VampiricLlamasItemTagProvider extends ItemTagsProvider {
         this.tag(Tags.Items.ARMORS).add(VampiricLlamasItems.VAMPIRE_LEATHER_LEGGINGS.get());
         this.tag(Tags.Items.ARMORS).add(VampiricLlamasItems.VAMPIRE_LEATHER_BOOTS.get());
 
+
+        this.tag(VampiricLlamas.VAMPIRE_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_HELMET.get());
+        this.tag(VampiricLlamas.VAMPIRE_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_CHESTPLATE.get());
+        this.tag(VampiricLlamas.VAMPIRE_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_LEGGINGS.get());
+        this.tag(VampiricLlamas.VAMPIRE_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_BOOTS.get());
+        this.tag(ItemTags.DYEABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_HELMET.get());
+        this.tag(ItemTags.DYEABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_CHESTPLATE.get());
+        this.tag(ItemTags.DYEABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_LEGGINGS.get());
+        this.tag(ItemTags.DYEABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_BOOTS.get());
+        this.tag(ItemTags.ARMOR_ENCHANTABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_HELMET.get());
+        this.tag(ItemTags.ARMOR_ENCHANTABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_CHESTPLATE.get());
+        this.tag(ItemTags.ARMOR_ENCHANTABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_LEGGINGS.get());
+        this.tag(ItemTags.ARMOR_ENCHANTABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_BOOTS.get());
+        this.tag(ItemTags.TRIMMABLE_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_HELMET.get());
+        this.tag(ItemTags.TRIMMABLE_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_CHESTPLATE.get());
+        this.tag(ItemTags.TRIMMABLE_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_LEGGINGS.get());
+        this.tag(ItemTags.TRIMMABLE_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_BOOTS.get());
+        this.tag(ItemTags.HEAD_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_HELMET.get());
+        this.tag(ItemTags.CHEST_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_CHESTPLATE.get());
+        this.tag(ItemTags.LEG_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_LEGGINGS.get());
+        this.tag(ItemTags.FOOT_ARMOR).add(VampiricLlamasItems.VAMPIRE_SCALE_BOOTS.get());
+        this.tag(ItemTags.HEAD_ARMOR_ENCHANTABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_HELMET.get());
+        this.tag(ItemTags.CHEST_ARMOR_ENCHANTABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_CHESTPLATE.get());
+        this.tag(ItemTags.LEG_ARMOR_ENCHANTABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_LEGGINGS.get());
+        this.tag(ItemTags.FOOT_ARMOR_ENCHANTABLE).add(VampiricLlamasItems.VAMPIRE_SCALE_BOOTS.get());
+        this.tag(Tags.Items.ARMORS).add(VampiricLlamasItems.VAMPIRE_SCALE_HELMET.get());
+        this.tag(Tags.Items.ARMORS).add(VampiricLlamasItems.VAMPIRE_SCALE_CHESTPLATE.get());
+        this.tag(Tags.Items.ARMORS).add(VampiricLlamasItems.VAMPIRE_SCALE_LEGGINGS.get());
+        this.tag(Tags.Items.ARMORS).add(VampiricLlamasItems.VAMPIRE_SCALE_BOOTS.get());
+
+        this.tag(ItemTags.DURABILITY_ENCHANTABLE).add(VampiricLlamasItems.TOTEM_OF_ENVENOMATION.get());
+
     }
 }

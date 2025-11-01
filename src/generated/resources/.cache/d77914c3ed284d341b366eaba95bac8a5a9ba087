@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-03T21:57:09.1823595	Tags for minecraft:entity_type mod id vampiricllamas
-372608b4d1d666b3d7405a6f99f33b07912cb63a data/minecraft/tags/entity_type/fall_damage_immune.json
+// 1.21.1	2025-10-28T15:35:02.3510031	Tags for minecraft:entity_type mod id vampiricllamas
+f1cfa9077a9852815845c93ffbd30bf80254d83e data/minecraft/tags/entity_type/fall_damage_immune.json
 7527346049082d8a2a5d0669a38935b45459a7e1 data/minecraft/tags/entity_type/impact_projectiles.json
-372608b4d1d666b3d7405a6f99f33b07912cb63a data/minecraft/tags/entity_type/undead.json
+f1cfa9077a9852815845c93ffbd30bf80254d83e data/minecraft/tags/entity_type/undead.json
