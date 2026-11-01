@@ -6,20 +6,19 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.animal.equine.Llama;
 import net.minecraft.world.entity.projectile.LlamaSpit;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Unique;
 
 public class LlamaBloodSpit extends LlamaSpit {
 
     @Unique
-    public static final Vector3f BLOOD_COLOR1 = new Vector3f(124, 15, 19).div(255);
+    public static final int BLOOD_COLOR1 = 0x7c0f13;
     @Unique
-    public static final Vector3f BLOOD_COLOR2 = new Vector3f(187, 26, 32).div(255);
+    public static final int BLOOD_COLOR2 = 0xbb1a1f;
 
     public LlamaBloodSpit(EntityType<? extends LlamaSpit> entityType, Level level) {
         super(entityType, level);

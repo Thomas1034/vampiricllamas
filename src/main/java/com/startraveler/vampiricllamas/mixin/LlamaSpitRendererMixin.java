@@ -1,10 +1,8 @@
 package com.startraveler.vampiricllamas.mixin;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import com.startraveler.vampiricllamas.client.renderer.LlamaBloodSpitRenderer;
 import net.minecraft.client.renderer.entity.LlamaSpitRenderer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.projectile.LlamaSpit;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -12,13 +10,13 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(LlamaSpitRenderer.class)
 public class LlamaSpitRendererMixin {
 
-    @ModifyArg(method = "render*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/LlamaSpitModel;renderType(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"), index = 0 // The texture is the 1nd parameter (0-based index)
+    @ModifyArg(method = "submit(Lnet/minecraft/client/renderer/entity/state/LlamaSpitRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/resources/Identifier;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"), index = 3 // The texture is the 3rd parameter (0-based index)
     )
-    public ResourceLocation modifyTextureLocation(ResourceLocation original, @Local(argsOnly = true) LlamaSpit entity) {
+    public Identifier modifyTextureLocation(Identifier original) {
         LlamaSpitRenderer llamaSpit = (LlamaSpitRenderer) (Object) (this);
 
-        if (llamaSpit instanceof LlamaBloodSpitRenderer bloodSpitRenderer) {
-            return bloodSpitRenderer.getTextureLocation(entity);
+        if (llamaSpit instanceof LlamaBloodSpitRenderer) {
+            return LlamaBloodSpitRenderer.LLAMA_BLOOD_SPIT_LOCATION;
         }
         return original;
     }

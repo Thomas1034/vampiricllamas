@@ -1,9 +1,6 @@
 package com.startraveler.vampiricllamas.data;
 
-import com.startraveler.vampiricllamas.VampiricLlamas;
-import com.startraveler.vampiricllamas.VampiricLlamasEffects;
-import com.startraveler.vampiricllamas.VampiricLlamasEntities;
-import com.startraveler.vampiricllamas.VampiricLlamasItems;
+import com.startraveler.vampiricllamas.*;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
@@ -11,6 +8,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.apache.commons.lang3.text.WordUtils;
@@ -26,6 +24,7 @@ public class VampiricLlamasEnglishUSLanguageProvider extends LanguageProvider {
     private final Set<Item> excludedItems;
     private final Set<TagKey<?>> excludedTags;
     private final Set<MobEffect> excludedEffects;
+    private final Set<Potion> excludedPotions;
     private final Set<EntityType<?>> excludedEntityTypes;
 
     public VampiricLlamasEnglishUSLanguageProvider(PackOutput output) {
@@ -39,10 +38,12 @@ public class VampiricLlamasEnglishUSLanguageProvider extends LanguageProvider {
         this.add("vampiricllamas.configuration.batsToSummon", "Bats to Summon");
         this.add("vampiricllamas.configuration.shouldOverrideDifficulty", "Override Difficulty?");
         this.add("vampiricllamas.configuration.difficultyOverride", "Overridden Difficulty");
+        this.add("enchantment.vampiricllamas.gloaming", "Gloaming");
         excludedBlocks = new HashSet<>();
         excludedItems = new HashSet<>();
         excludedTags = new HashSet<>();
         excludedEffects = new HashSet<>();
+        excludedPotions = new HashSet<>();
         excludedEntityTypes = new HashSet<>();
     }
 
@@ -56,13 +57,14 @@ public class VampiricLlamasEnglishUSLanguageProvider extends LanguageProvider {
         this.addBlockTranslations(List.of());
         this.addTagTranslations(List.of(
                 VampiricLlamas.INVISIBLE_ARMOR_IN_DARK,
+                VampiricLlamas.VAMPIRE_ARMOR,
                 VampiricLlamas.MAKES_ARMOR_INVISIBLE_IN_DARK,
-                VampiricLlamas.ACTS_AS_TOTEM_OF_UNDYING,
                 VampiricLlamas.FLIGHT_DISABLING_EFFECTS
         ));
         this.addItemTranslations(VampiricLlamasItems.ITEMS.getEntries());
         this.addEffectTranslations(VampiricLlamasEffects.MOB_EFFECTS.getEntries());
         this.addEntityTranslations(VampiricLlamasEntities.ENTITIES.getEntries());
+        this.addPotionTranslations(VampiricLlamasPotions.POTIONS.getEntries());
 
     }
 
@@ -116,7 +118,7 @@ public class VampiricLlamasEnglishUSLanguageProvider extends LanguageProvider {
                 if (key != null) {
                     this.addBlock(
                             holder::value,
-                            WordUtils.capitalize(key.location().getPath().replace('/', ' ').replace('_', ' '))
+                            WordUtils.capitalize(key.identifier().getPath().replace('/', ' ').replace('_', ' '))
                     );
                 }
             }
@@ -132,7 +134,7 @@ public class VampiricLlamasEnglishUSLanguageProvider extends LanguageProvider {
                     this.addEffect(
                             holder::value,
                             WordUtils.capitalize(holder.getKey()
-                                    .location()
+                                    .identifier()
                                     .getPath()
                                     .replace('/', ' ')
                                     .replace('_', ' '))
@@ -150,7 +152,7 @@ public class VampiricLlamasEnglishUSLanguageProvider extends LanguageProvider {
                 if (key != null) {
                     this.addEntityType(
                             holder::value,
-                            WordUtils.capitalize(key.location().getPath().replace('/', ' ').replace('_', ' '))
+                            WordUtils.capitalize(key.identifier().getPath().replace('/', ' ').replace('_', ' '))
                     );
                 }
             }
@@ -166,10 +168,30 @@ public class VampiricLlamasEnglishUSLanguageProvider extends LanguageProvider {
                 if (key != null) {
                     this.addItem(
                             holder::value,
-                            WordUtils.capitalize(key.location().getPath().replace('/', ' ').replace('_', ' '))
+                            WordUtils.capitalize(key.identifier().getPath().replace('/', ' ').replace('_', ' '))
                     );
                 }
             }
         });
     }
+
+    @SuppressWarnings("deprecation")
+    protected void addPotionTranslations(Collection<? extends Holder<Potion>> potions) {
+        potions.forEach(holder -> {
+            if (!excludedPotions.contains(holder.value())) {
+                ResourceKey<Potion> key = holder.getKey();
+                if (key != null) {
+                    String rawId = holder.getKey().identifier().getPath();
+                    String id = rawId.replace("long_", "").replace("strong_", "").replace("_", " ");
+                    String name = WordUtils.capitalize(id);
+                    this.add("item.minecraft.potion.effect." + rawId, "Potion of " + name);
+                    this.add("item.minecraft.splash_potion.effect." + rawId, "Splash Potion of " + name);
+                    this.add("item.minecraft.lingering_potion.effect." + rawId, "Lingering Potion of " + name);
+                    this.add("item.minecraft.tipped_arrow.effect." + rawId, "Arrow of " + name);
+                }
+                excludedPotions.add(holder.value());
+            }
+        });
+    }
+
 }

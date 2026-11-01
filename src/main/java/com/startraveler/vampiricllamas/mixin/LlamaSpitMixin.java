@@ -12,15 +12,15 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class LlamaSpitMixin {
 
 
-    @ModifyArg(method = "onHitEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"), index = 1 // The damage amount argument is the 2nd parameter (0-based index)
+    @ModifyArg(method = "onHitEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"), index = 2 // The damage amount argument is the 2nd parameter (0-based index)
     )
-    public float modifySpitDamage(float original) {
+    public float modifySpitDamage(float damage) {
         LlamaSpit llamaSpit = (LlamaSpit) (Object) (this);
 
         if (llamaSpit instanceof LlamaBloodSpit bloodSpit) {
             return bloodSpit.getSpitDamage();
         }
-        return original;
+        return damage;
     }
 
     @ModifyArg(method = "recreateFromPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), index = 0 // The particle type argument is the 1st parameter (0-based index)

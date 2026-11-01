@@ -2,32 +2,30 @@ package com.startraveler.vampiricllamas.item;
 
 import com.startraveler.vampiricllamas.VampiricLlamas;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
-public class EffectGivingArmorItem extends ArmorItem {
+public class EffectGivingArmorItem extends Item {
     protected final List<ArmorEffect> effects;
 
-    public EffectGivingArmorItem(Holder<ArmorMaterial> material, Type type, Properties properties, Supplier<MobEffectInstance> effect, BiPredicate<ItemStack, Entity> predicate) {
-        this(material, type, properties, List.of(new ArmorEffect(effect, predicate)));
+    public EffectGivingArmorItem(Properties properties, Supplier<MobEffectInstance> effect, BiPredicate<ItemStack, Entity> predicate) {
+        this(properties, List.of(new ArmorEffect(effect, predicate)));
     }
 
-    public EffectGivingArmorItem(Holder<ArmorMaterial> material, Type type, Properties properties, List<ArmorEffect> effects) {
-        super(material, type, properties);
+    public EffectGivingArmorItem(Properties properties, List<ArmorEffect> effects) {
+        super(properties);
         this.effects = effects;
     }
 
@@ -40,48 +38,43 @@ public class EffectGivingArmorItem extends ArmorItem {
     }
 
     public static BiPredicate<ItemStack, Entity> alwaysTrue() {
-        return (@NotNull ItemStack i, @NotNull Entity e) -> true;
+        return (@NotNull ItemStack _, @NotNull Entity _) -> true;
     }
 
     public static BiPredicate<ItemStack, Entity> inDarkness() {
-        return (@NotNull ItemStack i, @NotNull Entity e) -> VampiricLlamas.isDarkEnoughForVampireEffects(
+        return (@NotNull ItemStack _, @NotNull Entity e) -> VampiricLlamas.isDarkEnoughForVampireEffects(
                 e.level(),
                 e.blockPosition()
         );
     }
 
     public static BiPredicate<ItemStack, Entity> fullSuit(TagKey<Item> armors) {
-        return (@NotNull ItemStack i, @NotNull Entity e) -> {
+        return (@NotNull ItemStack _, @NotNull Entity e) -> {
+            int totalArmors = 0;
+            int matchingArmors = 0;
+            if (e instanceof LivingEntity livingEntity) {
 
-            if (i.getItem() instanceof ArmorItem armorItem && e instanceof LivingEntity livingEntity) {
-                int totalArmors = 0;
-                int matchingArmors = 0;
-                ResourceKey<ArmorMaterial> material = armorItem.getMaterial().getKey();
-                if (material != null) {
-                    for (ItemStack worn : livingEntity.getArmorSlots()) {
+                for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
+                    if (livingEntity.canUseSlot(equipmentSlot)) {
                         totalArmors++;
-                        if (worn.is(armors)) {
+                        ItemStack stackInSlot = livingEntity.getItemBySlot(equipmentSlot);
+                        if (stackInSlot.is(armors)) {
                             matchingArmors++;
                         }
                     }
                 }
-                return totalArmors == matchingArmors && totalArmors > 0;
             }
-            return false;
+            return totalArmors == matchingArmors && totalArmors > 0;
         };
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
-        super.inventoryTick(stack, level, entity, slotId, isSelected);
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull ServerLevel level, @NotNull Entity entity, EquipmentSlot slot) {
+        super.inventoryTick(stack, level, entity, slot);
         if (entity instanceof LivingEntity livingEntity && !level.isClientSide()) {
-            for (ItemStack wornArmor : livingEntity.getArmorSlots()) {
-                if (wornArmor.is(this)) {
-                    for (ArmorEffect effect : this.effects) {
-                        if (effect.predicate().test(stack, entity)) {
-                            livingEntity.addEffect(effect.effect.get());
-                        }
-                    }
+            for (ArmorEffect effect : this.effects) {
+                if (effect.predicate().test(stack, entity)) {
+                    livingEntity.addEffect(effect.effect.get());
                 }
             }
         }

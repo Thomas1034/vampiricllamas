@@ -30,7 +30,7 @@ public class TunableSpeedTrackingEmitter extends TrackingEmitter {
                 double x = this.entity.getX(dx / 4.0);
                 double y = this.entity.getY(0.5 + dy / 4.0);
                 double z = this.entity.getZ(dz / 4.0);
-                this.level.addParticle(this.particleType, false, x, y, z, dx, dy + 0.2 * this.maxSpeed, dz);
+                this.level.addParticle(this.particleType, false, false, x, y, z, dx, dy + 0.2 * this.maxSpeed, dz);
             }
         }
 

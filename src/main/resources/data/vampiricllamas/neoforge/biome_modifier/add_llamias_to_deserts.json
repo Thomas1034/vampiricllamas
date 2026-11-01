@@ -1,0 +1,12 @@
+{
+    "type": "neoforge:add_spawns",
+    "biomes": "#c:is_desert",
+    "spawners": [
+        {
+            "type": "vampiricllamas:llamia",
+            "weight": 5,
+            "minCount": 4,
+            "maxCount": 10
+        }
+    ]
+}

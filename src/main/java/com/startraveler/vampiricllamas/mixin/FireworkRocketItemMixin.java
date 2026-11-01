@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(FireworkRocketItem.class)
 public class FireworkRocketItemMixin {
 
-    @WrapOperation(method = "use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isFallFlying()Z"))
+    @WrapOperation(method = "use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isFallFlying()Z"))
     public boolean disallowFireworkLaunchingWithEffects(Player instance, Operation<Boolean> original) {
 
         return original.call(instance) && instance.getActiveEffects().stream().noneMatch((MobEffectInstance mobEffectInstance) -> mobEffectInstance.getEffect().is(

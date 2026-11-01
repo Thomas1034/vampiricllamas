@@ -1,0 +1,54 @@
+{
+  "layers": {
+    "wings": [
+      {
+        "texture": "vampiricllamas:vampire_cloak",
+        "use_player_texture": false
+      }
+    ],
+    "horse_body": [
+      {
+        "dyeable": {
+          "color_when_undyed": -13684945
+        },
+        "texture": "vampiricllamas:vampire_leather"
+      },
+      {
+        "texture": "vampiricllamas:vampire_leather_overlay"
+      }
+    ],
+    "humanoid": [
+      {
+        "dyeable": {
+          "color_when_undyed": -13684945
+        },
+        "texture": "vampiricllamas:vampire_leather"
+      },
+      {
+        "texture": "vampiricllamas:vampire_leather_overlay"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "dyeable": {
+          "color_when_undyed": -13684945
+        },
+        "texture": "vampiricllamas:vampire_leather"
+      },
+      {
+        "texture": "vampiricllamas:vampire_leather_overlay"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "dyeable": {
+          "color_when_undyed": -13684945
+        },
+        "texture": "vampiricllamas:vampire_leather"
+      },
+      {
+        "texture": "vampiricllamas:vampire_leather_overlay"
+      }
+    ]
+  }
+}

@@ -216,6 +216,30 @@
         "max": 3,
         "min": 1
       }
+    },
+    {
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 30,
+              "options": [
+                "vampiricllamas:gloaming"
+              ]
+            }
+          ],
+          "name": "minecraft:book",
+          "weight": 1
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 2,
+        "min": 1
+      }
     }
   ],
   "random_sequence": "vampiricllamas:chests/graveyard"

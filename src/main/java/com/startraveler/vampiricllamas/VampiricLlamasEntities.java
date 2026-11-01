@@ -4,6 +4,7 @@ import com.startraveler.vampiricllamas.entity.LlamaBloodSpit;
 import com.startraveler.vampiricllamas.entity.Llamia;
 import com.startraveler.vampiricllamas.entity.VampireLlama;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.phys.Vec3;
@@ -25,7 +26,8 @@ public class VampiricLlamasEntities {
                     .eyeHeight(1.7765F)
                     .passengerAttachments(new Vec3(0.0F, 1.37, -0.3))
                     .clientTrackingRange(10)
-                    .build("vampire_llama")
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, VampiricLlamas.id("vampire_llama"))
+                    )
     );
 
     public static final DeferredHolder<EntityType<?>, EntityType<Llamia>> LLAMIA = ENTITIES.register(
@@ -35,7 +37,8 @@ public class VampiricLlamasEntities {
                     .eyeHeight(1.7765F)
                     .passengerAttachments(new Vec3(0.0F, 1.37, -0.3))
                     .clientTrackingRange(10)
-                    .build("llamia")
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, VampiricLlamas.id("llamia"))
+                    )
     );
 
     public static final DeferredHolder<EntityType<?>, EntityType<LlamaBloodSpit>> LLAMA_BLOOD_SPIT = ENTITIES.register(
@@ -44,7 +47,8 @@ public class VampiricLlamasEntities {
                     .sized(0.25F, 0.25F)
                     .clientTrackingRange(4)
                     .updateInterval(10)
-                    .build("llama_blood_spit")
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, VampiricLlamas.id("llama_blood_spit"))
+                    )
     );
 
     public static void init(IEventBus bus) {

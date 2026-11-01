@@ -1,0 +1,24 @@
+{
+  "layers": {
+    "horse_body": [
+      {
+        "texture": "vampiricllamas:vampire_scales"
+      }
+    ],
+    "humanoid": [
+      {
+        "texture": "vampiricllamas:vampire_scales"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "vampiricllamas:vampire_scales"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "vampiricllamas:vampire_scales"
+      }
+    ]
+  }
+}

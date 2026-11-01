@@ -1,106 +1,63 @@
 package com.startraveler.vampiricllamas;
 
-import net.minecraft.Util;
-import net.minecraft.core.registries.Registries;
+import com.google.common.collect.Maps;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.equipment.EquipmentAsset;
 
-import java.util.EnumMap;
-import java.util.List;
+import java.util.Map;
 
 public class VampiricLlamasArmorMaterials {
 
-    public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(
-            Registries.ARMOR_MATERIAL,
-            VampiricLlamas.MODID
+    public static final ResourceKey<? extends Registry<EquipmentAsset>> ROOT_ID = ResourceKey.createRegistryKey(
+            Identifier.withDefaultNamespace("equipment_asset"));
+
+    public static final ResourceKey<EquipmentAsset> VAMPIRE_LEATHER_CLOAK_KEY = ResourceKey.create(
+            ROOT_ID,
+            VampiricLlamas.id("vampire_leather_cloak")
+    );
+    public static final ResourceKey<EquipmentAsset> VAMPIRE_LEATHER_KEY = ResourceKey.create(
+            ROOT_ID,
+            VampiricLlamas.id("vampire_leather")
+    );
+    public static final ArmorMaterial VAMPIRE_LEATHER_ARMOR_MATERIAL = new ArmorMaterial(
+            20,
+            makeDefense(3, 4, 5, 3, 4), 6, SoundEvents.ARMOR_EQUIP_LEATHER,
+            0, 0, VampiricLlamas.REPAIRS_VAMPIRE_LEATHER_ARMOR, VAMPIRE_LEATHER_KEY
+    );
+    public static final ResourceKey<EquipmentAsset> VAMPIRE_SCALE_KEY = ResourceKey.create(
+            ROOT_ID,
+            VampiricLlamas.id("vampire_scale")
+    );
+    public static final ArmorMaterial VAMPIRE_SCALE_ARMOR_MATERIAL = new ArmorMaterial(
+            20,
+            makeDefense(2, 3, 4, 2, 6), 16, SoundEvents.ARMOR_EQUIP_CHAIN,
+            0, 0.1f, VampiricLlamas.REPAIRS_VAMPIRE_SCALE_ARMOR, VAMPIRE_SCALE_KEY
     );
 
-    // ARMOR_MATERIALS is a DeferredRegister<ArmorMaterial>
+    // From Kaupenjoe
+    // https://github.com/Tutorials-By-Kaupenjoe/NeoForge-Tutorial-26.X/blob/20-armor/src/main/java/net/kaupenjoe/tutorialmod/item/ModArmorMaterials.java
+    private static Map<ArmorType, Integer> makeDefense(int boots, int legs, int chest, int helm, int body) {
+        return Maps.newEnumMap(
+                Map.of(
+                        ArmorType.BOOTS,
+                        boots,
+                        ArmorType.LEGGINGS,
+                        legs,
+                        ArmorType.CHESTPLATE,
+                        chest,
+                        ArmorType.HELMET,
+                        helm,
+                        ArmorType.BODY,
+                        body
+                )
+        );
+    }
 
-    // We place copper somewhere between chainmail and iron.
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> VAMPIRE_LEATHER_ARMOR_MATERIAL =
-            ARMOR_MATERIALS.register(
-                    "vampire_leather", () -> new ArmorMaterial(
-                            // Determines the defense value of this armor material, depending on what armor piece it is.
-                            Util.make(
-                                    new EnumMap<>(ArmorItem.Type.class), map -> {
-                                        map.put(ArmorItem.Type.BOOTS, 3);
-                                        map.put(ArmorItem.Type.LEGGINGS, 4);
-                                        map.put(ArmorItem.Type.CHESTPLATE, 5);
-                                        map.put(ArmorItem.Type.HELMET, 3);
-                                        map.put(ArmorItem.Type.BODY, 4);
-                                    }
-                            ),
-                            // Determines the enchantability of the tier. This represents how good the enchantments on this armor will be.
-                            6,
-                            // Determines the sound played when equipping this armor.
-                            // This is wrapped with a Holder.
-                            SoundEvents.ARMOR_EQUIP_LEATHER,
-                            // Determines the repair item for this armor.
-                            () -> Ingredient.of(Tags.Items.LEATHERS),
-                            // Determines the texture locations of the armor to apply when rendering
-                            List.of(
-                                    // Creates a new armor texture that will be located at:
-                                    // - 'assets/mod_id/textures/models/armor/copper_layer_1.png' for the outer texture
-                                    // - 'assets/mod_id/textures/models/armor/copper_layer_2.png' for the inner texture (only legs)
-                                    new ArmorMaterial.Layer(
-                                            VampiricLlamas.location("vampire_leather"), "", true
-                                    ),
-                                    // Creates a new armor texture that will be rendered on top of the previous at:
-                                    // - 'assets/mod_id/textures/models/armor/copper_layer_1_overlay.png' for the outer texture
-                                    // - 'assets/mod_id/textures/models/armor/copper_layer_2_overlay.png' for the inner texture (only legs)
-                                    // 'true' means that the armor material is dyeable; however, the item must also be added to the 'minecraft:dyeable' tag
-                                    new ArmorMaterial.Layer(
-                                            VampiricLlamas.location("vampire_leather"), "_overlay", false
-                                    )
-                            ),
-                            0,
-                            0
-                    )
-            );
-
-    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> VAMPIRE_SCALE_ARMOR_MATERIAL =
-            ARMOR_MATERIALS.register(
-                    "vampire_scale", () -> new ArmorMaterial(
-                            // Determines the defense value of this armor material, depending on what armor piece it is.
-                            Util.make(
-                                    new EnumMap<>(ArmorItem.Type.class), map -> {
-                                        map.put(ArmorItem.Type.BOOTS, 2);
-                                        map.put(ArmorItem.Type.LEGGINGS, 3);
-                                        map.put(ArmorItem.Type.CHESTPLATE, 4);
-                                        map.put(ArmorItem.Type.HELMET, 2);
-                                        map.put(ArmorItem.Type.BODY, 6);
-                                    }
-                            ),
-                            // Determines the enchantability of the tier. This represents how good the enchantments on this armor will be.
-                            16,
-                            // Determines the sound played when equipping this armor.
-                            // This is wrapped with a Holder.
-                            SoundEvents.ARMOR_EQUIP_CHAIN,
-                            // Determines the repair item for this armor.
-                            () -> Ingredient.of(VampiricLlamasItems.VAMPIRE_SCALE),
-                            // Determines the texture locations of the armor to apply when rendering
-                            List.of(
-                                    // Creates a new armor texture that will be located at:
-                                    // - 'assets/mod_id/textures/models/armor/copper_layer_1.png' for the outer texture
-                                    // - 'assets/mod_id/textures/models/armor/copper_layer_2.png' for the inner texture (only legs)
-                                    new ArmorMaterial.Layer(
-                                            VampiricLlamas.location("vampire_scale"), "", false
-                                    )
-                            ),
-                            0,
-                            0.1f
-                    )
-            );
-
-
-    public static void init(IEventBus bus) {
-        ARMOR_MATERIALS.register(bus);
+    public static void init() {
     }
 }

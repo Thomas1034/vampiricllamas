@@ -4,27 +4,19 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.component.Tool;
 import net.neoforged.neoforge.common.util.TriPredicate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class EffectGivingSwordItem extends SwordItem {
+public class EffectGivingSwordItem extends Item {
     protected final List<SwordEffect> effects;
 
-    public EffectGivingSwordItem(Tier tier, Properties properties, List<SwordEffect> effects) {
-        super(tier, properties);
-        this.effects = effects;
-    }
-
-    @SuppressWarnings("unused")
-    public EffectGivingSwordItem(Tier tier, Properties properties, Tool toolComponentData, List<SwordEffect> effects) {
-        super(tier, properties, toolComponentData);
+    public EffectGivingSwordItem(Properties properties, List<SwordEffect> effects) {
+        super(properties);
         this.effects = effects;
     }
 
@@ -38,7 +30,7 @@ public class EffectGivingSwordItem extends SwordItem {
     }
 
     public static Supplier<MobEffectInstance> defaultEffect(@NotNull Holder<MobEffect> effect, int amplifier) {
-        return () -> new MobEffectInstance(effect, 40, amplifier, true, true);
+        return tickCountEffect(effect, 40, amplifier);
     }
 
     @Override

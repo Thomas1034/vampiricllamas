@@ -1,13 +1,16 @@
 package com.startraveler.vampiricllamas.entity;
 
+import com.startraveler.vampiricllamas.VampiricLlamas;
 import com.startraveler.vampiricllamas.VampiricLlamasEffects;
 import com.startraveler.vampiricllamas.VampiricLlamasEntities;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -17,18 +20,23 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.camel.Camel;
-import net.minecraft.world.entity.animal.horse.Llama;
-import net.minecraft.world.entity.animal.horse.TraderLlama;
+import net.minecraft.world.entity.animal.equine.Llama;
+import net.minecraft.world.entity.animal.equine.TraderLlama;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import javax.annotation.Nullable;
 
 public class Llamia extends Llama implements VampiresThatAttack {
 
+    public static final Identifier LLAMIA_LOCATION = VampiricLlamas.id(
+            "textures/entity/llama/llamia.png");
+    public static final Identifier YELLOW_VAMPIRE_EYES = VampiricLlamas.id(
+            "textures/entity/llama/llamia_eyes.png");
     protected static final EntityDataAccessor<Boolean> DATA_IS_ATTACKING_ID = SynchedEntityData.defineId(
             Llamia.class,
             EntityDataSerializers.BOOLEAN
@@ -56,8 +64,9 @@ public class Llamia extends Llama implements VampiresThatAttack {
     }
 
     @Override
-    public boolean doHurtTarget(@NotNull Entity entity) {
-        if (!super.doHurtTarget(entity)) {
+    public boolean doHurtTarget(@NonNull ServerLevel level, @NotNull Entity entity) {
+
+        if (!super.doHurtTarget(level, entity)) {
             return false;
         } else {
             if (entity instanceof LivingEntity) {
@@ -155,14 +164,16 @@ public class Llamia extends Llama implements VampiresThatAttack {
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull EntitySpawnReason spawnType, @Nullable SpawnGroupData spawnGroupData) {
         SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
         this.addEffect(new MobEffectInstance(
                 VampiricLlamasEffects.VENOMOUS,
                 MobEffectInstance.INFINITE_DURATION,
                 MobEffectInstance.MIN_AMPLIFIER, true, false
         ));
-        this.setPersistenceRequired();
+        if (spawnType != EntitySpawnReason.NATURAL) {
+            this.setPersistenceRequired();
+        }
         return result;
     }
 
@@ -173,11 +184,11 @@ public class Llamia extends Llama implements VampiresThatAttack {
 
     // From Zombie, loosely.
     @Override
-    public boolean killedEntity(@NotNull ServerLevel level, @NotNull LivingEntity entity) {
-        boolean result = super.killedEntity(level, entity);
+    public boolean killedEntity(@NotNull ServerLevel level, @NotNull LivingEntity entity, @NonNull DamageSource damageSource) {
+        boolean result = super.killedEntity(level, entity, damageSource);
         if (level.getDifficulty() == Difficulty.NORMAL || level.getDifficulty() == Difficulty.HARD) {
             if (entity instanceof Llama llama && (llama.getType() == EntityType.LLAMA) && net.neoforged.neoforge.event.EventHooks.canLivingConvert(
-                    entity, VampiricLlamasEntities.VAMPIRE_LLAMA.get(), (timer) -> {
+                    entity, VampiricLlamasEntities.VAMPIRE_LLAMA.get(), (_) -> {
                     }
             )) {
                 if (level.getDifficulty() != Difficulty.HARD && this.random.nextBoolean()) {
@@ -186,7 +197,7 @@ public class Llamia extends Llama implements VampiresThatAttack {
 
                 result = VampireLlama.convertLlamaToVampire(level, llama, result);
             } else if (entity instanceof TraderLlama llama && (llama.getType() == EntityType.TRADER_LLAMA) && net.neoforged.neoforge.event.EventHooks.canLivingConvert(
-                    entity, VampiricLlamasEntities.LLAMIA.get(), (timer) -> {
+                    entity, VampiricLlamasEntities.LLAMIA.get(), (_) -> {
                     }
             )) {
                 if (level.getDifficulty() != Difficulty.HARD && this.random.nextBoolean()) {
@@ -202,6 +213,16 @@ public class Llamia extends Llama implements VampiresThatAttack {
 
     public boolean isAttacking() {
         return this.entityData.get(DATA_IS_ATTACKING_ID);
+    }
+
+    @Override
+    public @NotNull Identifier trueAppearance() {
+        return LLAMIA_LOCATION;
+    }
+
+    @Override
+    public @NotNull Identifier eyes() {
+        return YELLOW_VAMPIRE_EYES;
     }
 
     public void setAttacking(boolean isAttacking) {

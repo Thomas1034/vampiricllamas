@@ -2,32 +2,38 @@ package com.startraveler.vampiricllamas;
 
 import com.mojang.logging.LogUtils;
 import com.startraveler.vampiricllamas.data.*;
+import com.startraveler.vampiricllamas.effect.ImmunityMobEffect;
 import com.startraveler.vampiricllamas.entity.Llamia;
 import com.startraveler.vampiricllamas.entity.VampireLlama;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.horse.Llama;
-import net.minecraft.world.entity.animal.horse.TraderLlama;
-import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.entity.animal.equine.Llama;
+import net.minecraft.world.entity.animal.equine.TraderLlama;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -36,58 +42,69 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityStruckByLightningEvent;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-// TODO
-// Idea: add "Gloaming" exclusive enchantment making ordinary armor invisible in low light?
+// Make sure Gloaming generates in chests correctly.
 
+// Changes:
+// Fixed missing translation string for Venomous.
+// Higher levels of Venomous now cure Wither.
+// Adjusted the trigger for the Totem of Envenomation to also trigger on being shot by an entity.
+// Adjusted the trigger for the Totem of Envenomation to be triggered by magic damage.
+// Bugfixes:
+// Added a texture for the Agile effect.
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(VampiricLlamas.MODID)
 public class VampiricLlamas {
+
     // Define mod id in a common place for everything to reference
     public static final String MODID = "vampiricllamas";
     // Directly reference a slf4j logger
+    @SuppressWarnings("unused")
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final TagKey<Item> INVISIBLE_ARMOR_IN_DARK = TagKey.create(
             Registries.ITEM,
-            VampiricLlamas.location("invisible_armor_in_dark")
-    );
-    public static final TagKey<Item> VAMPIRE_ARMOR = TagKey.create(
-            Registries.ITEM,
-            VampiricLlamas.location("vampire_armor")
+            VampiricLlamas.id("invisible_armor_in_dark")
     );
 
-    public static final TagKey<Item> ACTS_AS_TOTEM_OF_UNDYING = TagKey.create(
+    public static final TagKey<Item> VAMPIRE_ARMOR = TagKey.create(Registries.ITEM, VampiricLlamas.id("vampire_armor"));
+
+    public static final TagKey<Item> REPAIRS_VAMPIRE_LEATHER_ARMOR = TagKey.create(
             Registries.ITEM,
-            VampiricLlamas.location("acts_as_totem_of_undying")
+            VampiricLlamas.id("repairs_vampire_leather_armor")
     );
 
+    public static final TagKey<Item> REPAIRS_VAMPIRE_SCALE_ARMOR = TagKey.create(
+            Registries.ITEM,
+            VampiricLlamas.id("repairs_vampire_scale_armor")
+    );
 
     public static final TagKey<Enchantment> MAKES_ARMOR_INVISIBLE_IN_DARK = TagKey.create(
             Registries.ENCHANTMENT,
-            VampiricLlamas.location("makes_armor_invisible_in_dark")
+            VampiricLlamas.id("makes_armor_invisible_in_dark")
     );
 
     public static final int IS_DARK_FOR_VAMPIRE_EFFECTS = 7;
     public static final TagKey<MobEffect> FLIGHT_DISABLING_EFFECTS = TagKey.create(
             Registries.MOB_EFFECT,
-            VampiricLlamas.location("flight_disabling_effects")
+            VampiricLlamas.id("flight_disabling_effects")
     );
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -97,7 +114,7 @@ public class VampiricLlamas {
         modEventBus.addListener(this::commonSetup);
 
         // Register the Deferred Registers to the mod event bus so objects get rendered.
-        VampiricLlamasArmorMaterials.init(modEventBus);
+        VampiricLlamasArmorMaterials.init();
         VampiricLlamasBlocks.init(modEventBus);
         VampiricLlamasCreativeModeTabs.init(modEventBus);
         VampiricLlamasDataComponents.init(modEventBus);
@@ -105,6 +122,7 @@ public class VampiricLlamas {
         VampiricLlamasItems.init(modEventBus);
         VampiricLlamasStructureProcessors.init(modEventBus);
         VampiricLlamasEffects.init(modEventBus);
+        VampiricLlamasPotions.init(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (VampiricLlamas) to respond directly to events.
@@ -115,14 +133,17 @@ public class VampiricLlamas {
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::registerEntityAttributes);
         modEventBus.addListener(this::gatherData);
+        modEventBus.addListener(this::registerSpawns);
 
         NeoForge.EVENT_BUS.addListener(this::onStruckByLightning);
+        NeoForge.EVENT_BUS.addListener(this::canEffectBeApplied);
+        NeoForge.EVENT_BUS.addListener(this::registerBrewingRecipes);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
-    public static boolean isInvisibleArmor(ItemStack stack, RegistryAccess access) {
+    public static boolean isInvisibleArmor(@NotNull ItemStack stack, @NotNull RegistryAccess access) {
         return stack.is(VampiricLlamas.INVISIBLE_ARMOR_IN_DARK) || stack.getAllEnchantments(access.lookupOrThrow(
                         Registries.ENCHANTMENT))
                 .entrySet()
@@ -130,39 +151,50 @@ public class VampiricLlamas {
                 .anyMatch(holderEntry -> holderEntry.getKey().is(MAKES_ARMOR_INVISIBLE_IN_DARK));
     }
 
-    public static boolean isDarkEnoughForVampireEffects(Level level, BlockPos blockPos) {
-        int blockLightLevel = level.getBrightness(LightLayer.BLOCK, blockPos);
-        int skyLightLevel = level.getBrightness(LightLayer.SKY, blockPos);
-        int packedLight = LightTexture.pack(blockLightLevel, skyLightLevel);
-        return isDarkEnoughForVampireEffects(level, packedLight);
+    public static boolean isDarkEnoughForVampireEffects(int lightLevel) {
+        return lightLevel < VampiricLlamas.IS_DARK_FOR_VAMPIRE_EFFECTS;
     }
 
-    public static boolean isDarkEnoughForVampireEffects(Level level, int packedLight) {
-        int blockLightLevel = LightTexture.block(packedLight);
-        int skyLightLevel = LightTexture.sky(packedLight);
-        boolean isDay = isDay(level);
-        boolean isSkyLightDarkEnough = skyLightLevel <= VampiricLlamas.IS_DARK_FOR_VAMPIRE_EFFECTS;
-        boolean isBlockLightDarkEnough = blockLightLevel <= VampiricLlamas.IS_DARK_FOR_VAMPIRE_EFFECTS;
-        boolean isNoSunlight = !isDay || isSkyLightDarkEnough;
-        return isNoSunlight && isBlockLightDarkEnough;
+    public static boolean isDarkEnoughForVampireEffects(@NotNull Level level, @NotNull BlockPos blockPos) {
+        int i = level.getRawBrightness(blockPos, level.getSkyDarken());
+        return isDarkEnoughForVampireEffects(i);
     }
 
-    public static ResourceLocation location(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MODID, path);
     }
 
-    public static int getSkyDarken(@NotNull Level level) {
-        double d0 = 1.0 - (double) (level.getRainLevel(1.0F) * 5.0F) / 16.0;
-        double d1 = 1.0 - (double) (level.getThunderLevel(1.0F) * 5.0F) / 16.0;
-        double d2 = 0.5 + 2.0 * Mth.clamp(Mth.cos(level.getTimeOfDay(1.0F) * (float) (Math.PI * 2)), -0.25, 0.25);
-        return (int) ((1.0 - d2 * d0 * d1) * 11.0);
+    // Copied from Monster, with one small change.
+    public static boolean checkMonsterSpawnRules(EntityType<? extends Entity> type, ServerLevelAccessor level, EntitySpawnReason spawnType, BlockPos pos, RandomSource random) {
+        return level.getDifficulty() != Difficulty.PEACEFUL && (EntitySpawnReason.ignoresLightRequirements(spawnType) || Monster.isDarkEnoughToSpawn(
+                level,
+                pos,
+                random
+        )) && VampiricLlamas.checkMobSpawnRules(type, level, spawnType, pos, random);
     }
 
-    public static boolean isDay(@Nullable Level level) {
-        if (level == null) {
-            return true;
-        }
-        return VampiricLlamas.getSkyDarken(level) < 4;
+    // Copied from Mob, with one small change.
+    public static boolean checkMobSpawnRules(EntityType<? extends Entity> type, LevelAccessor level, EntitySpawnReason spawnType, BlockPos pos, @SuppressWarnings("unused") RandomSource random) {
+        BlockPos blockpos = pos.below();
+        return spawnType == EntitySpawnReason.SPAWNER || level.getBlockState(blockpos)
+                .isValidSpawn(level, blockpos, type);
+    }
+
+    public void registerSpawns(RegisterSpawnPlacementsEvent event) {
+        event.register(
+                VampiricLlamasEntities.VAMPIRE_LLAMA.get(),
+                SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                VampiricLlamas::checkMonsterSpawnRules,
+                RegisterSpawnPlacementsEvent.Operation.OR
+        );
+        event.register(
+                VampiricLlamasEntities.LLAMIA.get(),
+                SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                VampiricLlamas::checkMonsterSpawnRules,
+                RegisterSpawnPlacementsEvent.Operation.OR
+        );
     }
 
     @SubscribeEvent
@@ -176,10 +208,11 @@ public class VampiricLlamas {
             slot = EquipmentSlot.OFFHAND;
         }
         if (slot != null) {
-            if (event.getSource().getDirectEntity() instanceof LivingEntity) {
+            if (event.getSource().getEntity() instanceof LivingEntity || event.getSource()
+                    .is(DamageTypeTags.WITCH_RESISTANT_TO)) {
 
                 // Make hurt entity immune.
-                hurtEntity.addEffect(new MobEffectInstance(VampiricLlamasEffects.VENOMOUS, 400, 0), hurtEntity);
+                hurtEntity.addEffect(new MobEffectInstance(VampiricLlamasEffects.VENOMOUS, 400, 1), hurtEntity);
                 // Add potion cloud.
                 AreaEffectCloud areaEffectCloud = new AreaEffectCloud(
                         hurtEntity.level(),
@@ -194,8 +227,10 @@ public class VampiricLlamas {
                 areaEffectCloud.setWaitTime(10);
                 areaEffectCloud.setRadiusPerTick(-areaEffectCloud.getRadius() / (float) areaEffectCloud.getDuration());
                 areaEffectCloud.setPotionContents(new PotionContents(
-                        Optional.empty(), Optional.of(0x2a730d), List.of(new MobEffectInstance(
-                        VampiricLlamasEffects.VENOM, 900, 1))
+                        Optional.empty(),
+                        Optional.of(0x2a730d),
+                        List.of(new MobEffectInstance(VampiricLlamasEffects.VENOM, 900, 0)),
+                        Optional.empty()
                 ));
                 hurtEntity.level().addFreshEntity(areaEffectCloud);
 
@@ -206,34 +241,21 @@ public class VampiricLlamas {
     }
 
     // On the mod event bus
-    public void gatherData(GatherDataEvent event) {
+    public void gatherData(GatherDataEvent.Server event) {
         final DataGenerator generator = event.getGenerator();
         final PackOutput output = generator.getPackOutput();
         final CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-        final ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-        final boolean run = event.includeServer();
+        final boolean run = event.includeDev();
 
         // Other providers
-        generator.addProvider(run, new VampiricLlamasItemModelProvider(output, existingFileHelper));
-        final BlockTagsProvider blockTagsProvider = new VampiricLlamasBlockTagProvider(
-                output,
-                lookupProvider,
-                existingFileHelper
-        );
+        generator.addProvider(run, new VampiricLlamasModelProvider(output));
+        final BlockTagsProvider blockTagsProvider = new VampiricLlamasBlockTagProvider(output, lookupProvider);
         generator.addProvider(run, blockTagsProvider);
-        generator.addProvider(run, new VampiricLlamasMobEffectTagProvider(output, lookupProvider, existingFileHelper));
+        generator.addProvider(run, new VampiricLlamasMobEffectTagProvider(output, lookupProvider));
         generator.addProvider(run, new VampiricLlamasEnglishUSLanguageProvider(output));
-        generator.addProvider(run, new VampiricLlamasEntityTypeTagProvider(output, lookupProvider, existingFileHelper));
-        generator.addProvider(
-                run,
-                new VampiricLlamasItemTagProvider(
-                        output,
-                        lookupProvider,
-                        blockTagsProvider.contentsGetter(),
-                        existingFileHelper
-                )
-        );
-        generator.addProvider(run, new VampiricLlamasRecipeProvider(output, lookupProvider));
+        generator.addProvider(run, new VampiricLlamasEntityTypeTagProvider(output, lookupProvider));
+        generator.addProvider(run, new VampiricLlamasItemTagProvider(output, lookupProvider));
+        generator.addProvider(run, new VampiricLlamasRecipeProvider.Runner(output, lookupProvider));
     }
 
     public void onStruckByLightning(EntityStruckByLightningEvent event) {
@@ -245,15 +267,57 @@ public class VampiricLlamas {
         }
     }
 
-    private void commonSetup(FMLCommonSetupEvent event) {
+    public void canEffectBeApplied(MobEffectEvent.Applicable event) {
+        MobEffectInstance newEffect = event.getEffectInstance();
+        LivingEntity entity = event.getEntity();
+        Collection<MobEffectInstance> activeEffects = entity.getActiveEffects();
+        for (MobEffectInstance currentEffect : activeEffects) {
+            if (currentEffect.getEffect() instanceof ImmunityMobEffect immunityEffect && immunityEffect.canCureEffectInstance(
+                    newEffect,
+                    currentEffect.getAmplifier()
+            )) {
+                event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+            }
+        }
+    }
 
-        event.enqueueWork(() -> {
-            Map<Item, CauldronInteraction> water = CauldronInteraction.WATER.map();
-            water.put(VampiricLlamasItems.VAMPIRE_LEATHER_BOOTS.get(), CauldronInteraction.DYED_ITEM);
-            water.put(VampiricLlamasItems.VAMPIRE_LEATHER_LEGGINGS.get(), CauldronInteraction.DYED_ITEM);
-            water.put(VampiricLlamasItems.VAMPIRE_LEATHER_CHESTPLATE.get(), CauldronInteraction.DYED_ITEM);
-            water.put(VampiricLlamasItems.VAMPIRE_LEATHER_HELMET.get(), CauldronInteraction.DYED_ITEM);
-        });
+    public void registerBrewingRecipes(RegisterBrewingRecipesEvent event) {
+        PotionBrewing.Builder builder = event.getBuilder();
+
+        builder.addMix(
+                Potions.AWKWARD,
+                VampiricLlamasItems.VAMPIRE_SCALE.get(),
+                VampiricLlamasPotions.VENOM.getDelegate()
+        );
+        builder.addMix(
+                VampiricLlamasPotions.VENOM.getDelegate(),
+                Items.REDSTONE,
+                VampiricLlamasPotions.LONG_VENOM.getDelegate()
+        );
+        builder.addMix(
+                VampiricLlamasPotions.VENOM.getDelegate(),
+                Items.GLOWSTONE_DUST,
+                VampiricLlamasPotions.STRONG_VENOM.getDelegate()
+        );
+
+        builder.addMix(
+                VampiricLlamasPotions.VENOM.getDelegate(),
+                Items.FERMENTED_SPIDER_EYE,
+                VampiricLlamasPotions.VENOMOUS.getDelegate()
+        );
+        builder.addMix(
+                VampiricLlamasPotions.LONG_VENOM.getDelegate(),
+                Items.FERMENTED_SPIDER_EYE,
+                VampiricLlamasPotions.LONG_VENOMOUS.getDelegate()
+        );
+        builder.addMix(
+                VampiricLlamasPotions.STRONG_VENOM.getDelegate(),
+                Items.FERMENTED_SPIDER_EYE,
+                VampiricLlamasPotions.STRONG_VENOMOUS.getDelegate()
+        );
+    }
+
+    private void commonSetup(FMLCommonSetupEvent event) {
     }
 
 
